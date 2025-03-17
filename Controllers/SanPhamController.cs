@@ -56,17 +56,36 @@ namespace BaiThucHanh02.Controllers
             return View(sanPham);
         }
         [HttpPost]
-        public ActionResult Edit(SanPham sanPham)
+        public ActionResult Edit(SanPham sanPham, HttpPostedFileBase ImageFile)
         {
-            if (ModelState.IsValid)
+            var existingSanPham = db.SanPhams.Find(sanPham.Id);
+            if (existingSanPham == null)
             {
-                db.Entry(sanPham).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return HttpNotFound();
             }
-            return View(sanPham);
-        }
 
+            existingSanPham.Name = sanPham.Name;
+            existingSanPham.Price = sanPham.Price;
+            existingSanPham.Description = sanPham.Description;
+            existingSanPham.Discount = sanPham.Discount;
+
+            if (ImageFile != null && ImageFile.ContentLength > 0)
+            {
+                string folderPath = Server.MapPath("~/Content/Images");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                string fileName = Path.GetFileName(ImageFile.FileName);
+                string filePath = Path.Combine(folderPath, fileName);
+                ImageFile.SaveAs(filePath);
+
+                existingSanPham.Image = "/Content/Images/" + fileName; 
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("Index"); 
+        }
         public ActionResult Details(int id)
         {
             var sanPham = db.SanPhams.Find(id);
@@ -75,6 +94,28 @@ namespace BaiThucHanh02.Controllers
                 return HttpNotFound();
             }
             return View(sanPham);
+        }
+        public ActionResult Delete(int id)
+        {
+            var sanPham = db.SanPhams.Find(id);
+            if (sanPham == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Xóa ảnh khỏi thư mục nếu tồn tại
+            if (!string.IsNullOrEmpty(sanPham.Image))
+            {
+                string filePath = Server.MapPath(sanPham.Image);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            db.SanPhams.Remove(sanPham);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
     }

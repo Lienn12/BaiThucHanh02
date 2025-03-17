@@ -145,6 +145,7 @@
         <span>FEATURED PRODUCT</span>
     </div>
 
+
     <div class="product-list">
         @foreach (var item in Model)
         {
@@ -155,31 +156,40 @@
                     {
                         <span class="discount">-@item.Discount%</span>
                     }
-                    <img src="@Url.Content(item.Image)" alt="@item.Name" />
+                    <img src="@item.Image?timestamp=@DateTime.Now.Ticks" width="250" height="250" />
                 }
                 else
                 {
-                    <img src="@Url.Content("~/Content/Images/tivi.jpg")" alt="default image" />
+                    <img src="@Url.Content("khong co anh")" alt="default image" />
                 }
                 <div class="product-info">
                     <h3 class="product-name">@item.Name</h3>
                     <div class="product-price">
-                        $@item.Price
-                        @if (item.NewPrice.HasValue)
+                        $@item.NewPrice
+                        @if (item.Price.HasValue)
                         {
-                            <span class="old-price">$@item.NewPrice</span>
+                            <span class="old-price">$@item.Price</span>
                         }
                     </div>
                     <p class="product-description">@item.Description</p>
                     <div class="product-actions">
                         <a href="@Url.Action("Details", "SanPham", new { id = item.Id })" class="btn btn-info">Chi tiết</a>
                         <a href="@Url.Action("EditForm", "SanPham", new { id = item.Id })" class="btn btn-warning">Sửa</a>
+                        <a href="@Url.Action("Delete", "SanPham", new { id = item.Id })" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
                     </div>
                 </div>
             </div>
         }
-    </div>
 
+    </div>
+    <script>
+        window.onload = function () {
+            var images = document.querySelectorAll("img");
+            images.forEach(function (img) {
+                img.src = img.src + "?t=" + new Date().getTime();
+            });
+        };
+    </script>
     <div class="add-product">
         <a href="@Url.Action("AddForm", "SanPham")" class="btn btn-primary">Thêm sản phẩm</a>
     </div>
