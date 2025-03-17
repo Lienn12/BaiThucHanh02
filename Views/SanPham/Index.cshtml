@@ -1,0 +1,186 @@
+﻿@model List<BaiThucHanh02.Models.SanPham>
+
+@{
+    ViewBag.Title = "Danh sách sản phẩm";
+}
+
+<!-- CSS cho giao diện sản phẩm -->
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .product-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .product-header {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+    }
+
+        .product-header span {
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+        }
+
+            .product-header span.active {
+                color: #000;
+                border-bottom: 2px solid red;
+                padding-bottom: 5px;
+            }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .product-item {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        position: relative;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+        .product-item img {
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+    .discount {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: red;
+        color: #fff;
+        padding: 5px;
+        border-radius: 50%;
+        font-size: 14px;
+    }
+
+    .product-name {
+        font-size: 16px;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 14px;
+        margin-left: 5px;
+    }
+
+    .product-description {
+        font-size: 14px;
+        color: #555;
+        margin: 10px 0;
+    }
+
+    .product-actions {
+        margin-top: 10px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 12px;
+        font-size: 14px;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 4px;
+        margin: 2px;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .add-product {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<h2 style="text-align: center;">Danh sách sản phẩm</h2>
+<div class="product-container">
+    <div class="product-header">
+        <span class="active">NEW PRODUCT</span>
+        <span>ON SALE</span>
+        <span>FEATURED PRODUCT</span>
+    </div>
+
+    <div class="product-list">
+        @foreach (var item in Model)
+        {
+            <div class="product-item">
+                @if (!string.IsNullOrEmpty(item.Image))
+                {
+                    if (item.Discount.HasValue && item.Discount > 0)
+                    {
+                        <span class="discount">-@item.Discount%</span>
+                    }
+                    <img src="@Url.Content(item.Image)" alt="@item.Name" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/Content/Images/tivi.jpg")" alt="default image" />
+                }
+                <div class="product-info">
+                    <h3 class="product-name">@item.Name</h3>
+                    <div class="product-price">
+                        $@item.Price
+                        @if (item.NewPrice.HasValue)
+                        {
+                            <span class="old-price">$@item.NewPrice</span>
+                        }
+                    </div>
+                    <p class="product-description">@item.Description</p>
+                    <div class="product-actions">
+                        <a href="@Url.Action("Details", "SanPham", new { id = item.Id })" class="btn btn-info">Chi tiết</a>
+                        <a href="@Url.Action("EditForm", "SanPham", new { id = item.Id })" class="btn btn-warning">Sửa</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="add-product">
+        <a href="@Url.Action("AddForm", "SanPham")" class="btn btn-primary">Thêm sản phẩm</a>
+    </div>
+</div>

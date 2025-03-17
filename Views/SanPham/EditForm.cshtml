@@ -1,0 +1,45 @@
+﻿@model BaiThucHanh02.Models.SanPham
+@{
+    ViewBag.Title = "Chỉnh sửa sản phẩm";
+}
+
+<h2>Chỉnh sửa sản phẩm</h2>
+
+@using (Html.BeginForm("Edit", "SanPham", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Image)
+        <input type="file" name="ImageFile" class="form-control" id="imageUpload" />
+
+        <!-- Hiển thị ảnh cũ nếu có -->
+        <img id="previewImage" src="@(string.IsNullOrEmpty(Model.Image) ? "/Content/Images/default.jpg" : Model.Image)" width="100" height="100" />
+
+        @Html.HiddenFor(m => m.Image) <!-- Giữ đường dẫn ảnh cũ nếu không thay đổi -->
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Price)
+        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Price)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description)
+        @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Discount)
+        @Html.TextBoxFor(m => m.Discount, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-warning">Cập nhật</button>
+}

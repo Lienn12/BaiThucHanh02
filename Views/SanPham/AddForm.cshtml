@@ -1,0 +1,39 @@
+﻿@model BaiThucHanh02.Models.SanPham
+
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+}
+
+<h2>Thêm sản phẩm</h2>
+
+@using (Html.BeginForm("AddProduct", "SanPham", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Image)
+        <input type="file" name="ImageFile" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Price)
+        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Price)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description)
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Discount)
+        @Html.TextBoxFor(m => m.Discount, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-success">Thêm</button>
+}
